@@ -1,0 +1,316 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/night.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown=""
+						data-separator="^\n---$"
+						data-separator-vertical="^\n>>>$">
+					<script type="text/template">
+
+ESB勉強会（第1回）  
+<br/>
+<h5>国内システム2部AP基盤WebフロントG</h5>
+<h5>梶岡 雅之</h5>
+
+---
+
+【勉強会の目標】  
+1. サンプルプロジェクトを動作出来るようにする
+1. サンプルプロジェクトの概要を理解する
+
+---
+
+STEP1 開発の準備
+
+>>>
+
+ 【事前に準備するもの】  
+1. JBossFuse（6.3.0）  
+1. Eclipse  
+1. JDK  
+1. Maven  
+
+>>>
+
+JBossFuse（6.3.0）  
+
+- <p class="fragment">圧縮ファイルを解凍して使用（インストールなし）</p>
+- <p class="fragment">[解凍フォルダ]/jboss-fuse-6.3.0.redhat-187/binにPathを通しておく</p>
+- <p class="fragment">仮想環境だと動作が重い</p>
+
+<aside class="notes">
+・Pathを通しておくことで、コマンドプロンプト立ち上げてfuseと入力するだけで起動できます。
+・仮想環境だと、ChromeとEclipse立ち上げた状態ではFuse起動出来ないかも・・・
+Heap領域が足りずに怒られることがあります。
+</aside>
+
+>>>
+
+Eclipse
+
+- <p class="fragment">Pleiades All in Oneが諸々いっぱい入ってて楽。<br/>（但し、ファイルサイズが大きい）</p>
+- <p class="fragment">JBossDeveloperStudioでも可。<br/>こちらを使う場合はIIJ共通基盤に連絡。</p>
+
+<aside class="notes">
+EclipseベースのJBossDeveloperStudioでも可。
+但し、使う場合は、IIJ共通基盤ででライセンス管理しているので連携が必要。
+</aside>
+
+>>>
+
+JDK
+
+- <p class="fragment">Java Development Kit、Javaの開発用ツール</p>
+- <p class="fragment">Oracleが無償でJDKを提供するのは「Java 10」が最後</p>
+- <p class="fragment">Java11以降はOSSコミュニティでのサポート</p>
+
+>>>
+
+Maven
+
+- <p class="fragment">Java用プロジェクト管理ツール</p>
+- <p class="fragment">Javaのビルドツールapache antに代わるものとして作られた</p>
+- <p class="fragment">pom.xmlにプロジェクトに関する情報を記載</p>
+- <p class="fragment">必要なライブラリやプラグインはインターネット上のセントラルリポジトリからビルド時にダウンロードしてくる</p>
+
+<aside class="notes">
+pom　・・・　「Project Object Model」の略で、プロジェクトのさまざまな情報を扱うためのオブジェクトモデル
+ざっくり理解としては、C言語で言うところのMakeみたいなもの
+Makefile＝pom.xmlみたいな感じ
+</aside>
+
+>>>
+
+Maven
+
+![Mavenの処理の流れ](img/img_maven.jpg)
+<h6>参考：Mavenについてまとめてみました  
+[https://qiita.com/enzen/items/8546357f4e67357fe730](https://qiita.com/enzen/items/8546357f4e67357fe730)</h6>
+
+>>>
+
+【資材置き場】
+1. JBossFuse（6.3.0）  
+<h5>[https://jss-jp.app.box.com/folder/5436675609](https://jss-jp.app.box.com/folder/5436675609)</h5>
+1. Eclipse  
+<h5>インターネット上から適宜</h5>
+1. JDK  
+<h5>[https://jss-jp.app.box.com/folder/33607783697](https://jss-jp.app.box.com/folder/33607783697)</h5>
+1. Maven  
+<h5>インターネット上から適宜</h5>
+<h5>setting.xmlの雛形  
+[https://jss-jp.app.box.com/folder/5436675609](https://jss-jp.app.box.com/folder/5436675609)</h5>
+
+
+---
+
+時間の都合上、開発ツール類のダウンロード等  
+事前準備は出来ているという前提で話を進めます・・・
+
+>>>
+
+やってみたけど、設定上手くできてないかも？  
+という場合は、質問して下さい。
+
+---
+
+STEP2 サンプルプロジェクトの利用
+
+>>>
+
+サンプルプロジェクトのダウンロード
+<h6>Boxから、サンプルのプロジェクトをダウンロードしてWorkspaceに展開</h6>
+<h6>[002JSS全員-002室部-7301基盤システム部-7390次期共通基盤開発PJT_全員公開-99_ドキュメント管理-06_ガイドライン・手順書-ESB-【共通】ESB開発ガイドライン-JavaSampleProject](https://jss-jp.app.box.com/folder/12149746965)</h6>
+![サンプルプロジェクト](img/img_sample.jpg)
+
+>>>
+
+サンプルプロジェクトのインポート
+<h6>パッケージ・エクスプローラーで右クリックし、インポートを選択</h6>
+![プロジェクトインポート](img/img_import.jpg)
+
+>>>
+
+- 適宜プロジェクトを修正  
+- 必要なライブラリ等あれば、pom.xmlに追記  
+- アプリ修正して動作検証	
+
+>>>
+
+先にプログラムを動かすまでの流れを見ておきます。
+
+>>>
+
+プロジェクトのビルド&インストール
+![プロジェクトインポート](img/img_maveninstall.jpg)
+
+<aside class="notes">
+プロジェクトを右クリックし、[実行]-[Maven ビルド]
+</aside>
+
+>>>
+
+コンソールを表示し、ビルド結果を確認します。
+![プロジェクトインポート結果](img/img_maveninstall_result.jpg)
+
+>>>
+
+ビルド＆インストールが成功していれば  
+repositry下にjarファイルが作成されています。
+![jar確認](img/img_jar.jpg)
+
+<aside class="notes">
+正確には、repository-[グループID]-[アーティファクトID]-[バージョン]下
+</aside>
+
+>>>
+
+JBossFuseを立ち上げて  
+OSGIフレームワーク上にインストールします。
+><h6>osgi:install -s mvn:com.redhat.sample/fusefilesample/1.0.0-SNAPSHOT</h6>  
+
+![OSGI install](img/img_fusedeploy.jpg)
+
+<aside class="notes">
+バンドルIDが表示されていることを確認する。
+プログラムに不備があるとエラーになっていることもあるので、インストール後にログを確認することを推奨します。
+OSGi（Open Services Gateway initiative）
+</aside>
+
+>>>
+
+以上で、サンプルのアプリケーションが起動している状態になります。
+
+>>>
+
+管理コマンド
+
+- osgi:list　（バンドルの一覧表示）  
+- log:tail　（ログの表示）  
+- log:clear　（ログのクリア）  
+  
+その他、色々ありますがhelpで探して試して下さい。
+
+---
+
+STEP3 サンプルプロジェクトの概要
+
+>>>
+
+プロジェクトの構成  
+![プロジェクト構成](img/img_fuseproject.jpg)
+
+<aside class="notes">
+全体的な処理の流れを記載したCamelルートと ルートから呼び出されるJavaプログラムで構成されています。
+B/Eプログラムで言えば、メインとなる.ccsのプログラムがCamelルートに該当し
+呼び出されるサブプログラムや関数等がJavaプログラムとしてイメージして貰えば良いかと思います。
+B/EでAPIをコールするように、各種コンポーネントを利用することで開発のSTEP数を削減できます。
+【補足】CamelルートはXMLの他、Java、Scala、Groovy等の言語での記述も可能です。
+</aside>
+
+>>>
+
+データ処理の流れ
+![プロジェクト構成](img/img_camelroute.jpg)
+
+>>>
+
+1. Exchangeと呼ばれる「箱」をベルトコンベアに流しながら加工していくイメージで処理されます。  
+1. Exchangeの中にはMessageと呼ばれる生産物が入っています。
+1. Messageの中はHeaderとBodyがあって、HeaderがMap型、BodyがObject型になっています。
+1. Camelではベルトコンベアの事をRouteと呼んでいます。
+
+>>>
+
+Excange
+![プロジェクト構成](img/img_exchange.jpg)
+
+>>>
+
+Message
+![プロジェクト構成](img/img_message.jpg)
+
+>>>
+
+B/Eで置き換えると・・・以下のようなイメージ  
+- Exchange：MQで受け渡されるデータ全体  
+- Header：制御ヘッダやAP共通ヘッダ  
+- Body:IOデータ部  
+
+>>>
+
+ESB開発ガイド p.23～30を確認しながら  
+プログラムの動作確認
+
+---
+
+本日のおさらい
+
+>>>
+
+1. Exchangeの中から必要なデータを取り出し、加工・精製し、またExchangeに詰め込んで次の処理に渡す。
+1. 上記を繰り返しながら生成物を作り出す。
+
+>>>
+
+- データの受け渡しがSOAPであろうとMQであろうとFileであろうと内部処理は同じです。
+- アプリケーションが行うことはExchangeの加工・精製のみです。
+
+>>>
+
+とりあえず、動作させて、自分で色々試してみて下さい。  
+やってみると、また疑問点色々と出てくると思うので  
+その際は、梶岡までお問合せ下さい。
+
+>>>
+
+ご清聴、ありがとう御座いました。
+
+
+					</script>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				history: true,
+				controls: false,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
